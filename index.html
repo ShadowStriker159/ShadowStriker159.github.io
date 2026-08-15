@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShadowStriker159 — E-portafolio · Bases de Datos 2</title>
+<style>
+  :root{
+    --bg: #0b1220;
+    --bg-panel: #121a2b;
+    --bg-panel-2: #0e1626;
+    --border: #22304a;
+    --text: #e8eef5;
+    --muted: #7c8aa0;
+    --accent: #2dd4bf;
+    --accent-dim: #1a7d70;
+    --amber: #fbbf24;
+    --mono: "SF Mono", "JetBrains Mono", "Fira Code", Consolas, Menlo, monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(circle at 15% -10%, rgba(45,212,191,0.08), transparent 40%),
+      radial-gradient(circle at 90% 10%, rgba(251,191,36,0.05), transparent 35%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--accent);
+    letter-spacing:0.02em;
+  }
+  .eyebrow::before{content:"-- ";color:var(--muted);}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,18,32,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  nav{
+    max-width:1000px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+  }
+  .logo{
+    font-family:var(--mono); font-weight:600; font-size:0.95rem;
+    color:var(--text);
+  }
+  .logo span{color:var(--accent);}
+  .navlinks{display:flex; gap:28px; list-style:none; font-family:var(--mono); font-size:0.85rem;}
+  .navlinks a{text-decoration:none; color:var(--muted); transition:color .15s;}
+  .navlinks a:hover{color:var(--accent);}
+  @media (max-width:600px){
+    .navlinks{gap:14px; font-size:0.75rem;}
+  }
+
+  section{max-width:1000px; margin:0 auto; padding:80px 24px;}
+
+  /* ---------- HERO / QUERY TERMINAL ---------- */
+  .hero{padding-top:64px;}
+  .terminal{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 20px 60px -20px rgba(0,0,0,0.6);
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:10px 16px;
+    background:var(--bg-panel-2);
+    border-bottom:1px solid var(--border);
+  }
+  .dot{width:10px; height:10px; border-radius:50%;}
+  .dot.r{background:#ef4444;} .dot.y{background:#f59e0b;} .dot.g{background:#22c55e;}
+  .terminal-title{margin-left:8px; font-family:var(--mono); font-size:0.75rem; color:var(--muted);}
+  .terminal-body{padding:24px; font-family:var(--mono); font-size:0.95rem;}
+  .query-line{color:var(--text);}
+  .query-line .kw{color:var(--accent);}
+  .query-line .str{color:var(--amber);}
+  .cursor{display:inline-block; width:8px; height:1.1em; background:var(--accent); vertical-align:text-bottom; animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  .result{margin-top:22px; border-top:1px dashed var(--border); padding-top:20px;
+    opacity:0; transform:translateY(6px);
+    animation:reveal .6s ease forwards; animation-delay:1.6s;
+  }
+  @keyframes reveal{to{opacity:1; transform:translateY(0);}}
+  .result-row{display:flex; gap:18px; flex-wrap:wrap; font-size:0.85rem;}
+  .field{background:var(--bg-panel-2); border:1px solid var(--border); border-radius:6px; padding:10px 14px; min-width:150px;}
+  .field .k{color:var(--muted); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em;}
+  .field .v{color:var(--text); font-size:0.95rem; margin-top:4px; font-family:var(--sans);}
+
+  .hero h1{
+    font-family:var(--mono); font-weight:700;
+    font-size:clamp(1.8rem, 4vw, 2.6rem);
+    margin:32px 0 10px;
+  }
+  .hero h1 .accent{color:var(--accent);}
+  .hero p.sub{color:var(--muted); max-width:56ch;}
+
+  /* ---------- PRESENTACIÓN ---------- */
+  .section-head{margin-bottom:28px;}
+  .section-head h2{font-family:var(--mono); font-size:1.6rem; margin-top:6px;}
+
+  .presentacion-grid{
+    display:grid; grid-template-columns:220px 1fr; gap:36px; align-items:start;
+  }
+  @media (max-width:700px){ .presentacion-grid{grid-template-columns:1fr;} }
+
+  .avatar-wrap{display:flex; flex-direction:column; align-items:center; gap:14px;}
+  .avatar{
+    width:180px; height:180px; border-radius:50%;
+    background:linear-gradient(145deg, var(--accent-dim), var(--bg-panel-2));
+    border:2px solid var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:3rem; color:var(--accent);
+    overflow:hidden;
+  }
+  .avatar img{width:100%; height:100%; object-fit:cover; display:none;} /* muestra al agregar foto real */
+  .avatar-caption{font-family:var(--mono); font-size:0.75rem; color:var(--muted); text-align:center;}
+
+  .bio p{margin-bottom:14px; color:var(--text);}
+  .bio p .label{display:block; font-family:var(--mono); font-size:0.72rem; color:var(--accent); margin-bottom:4px;}
+  .bio p.placeholder{color:var(--muted); font-style:italic;}
+
+  .video-block{margin-top:32px;}
+  .video-frame{
+    position:relative; width:100%; padding-top:56.25%;
+    background:var(--bg-panel); border:1px dashed var(--border); border-radius:10px;
+    overflow:hidden;
+  }
+  .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:none;}
+  .video-placeholder{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color:var(--muted); font-family:var(--mono); font-size:0.85rem; gap:8px; text-align:center; padding:16px;
+  }
+  .video-placeholder .play{
+    width:56px; height:56px; border-radius:50%; border:2px solid var(--accent);
+    display:flex; align-items:center; justify-content:center; color:var(--accent); font-size:1.4rem;
+  }
+
+  /* ---------- EVIDENCIAS ---------- */
+  .schema-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:18px;}
+  .table-card{
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; overflow:hidden;
+    transition:border-color .15s, transform .15s;
+  }
+  .table-card:hover{border-color:var(--accent); transform:translateY(-3px);}
+  .table-card-head{
+    padding:14px 16px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    font-family:var(--mono); font-size:0.85rem; color:var(--accent);
+  }
+  .badge{
+    font-family:var(--mono); font-size:0.65rem; color:var(--muted);
+    border:1px solid var(--border); border-radius:20px; padding:2px 8px;
+  }
+  .table-card-body{padding:16px; color:var(--muted); font-size:0.85rem; min-height:70px;}
+
+  footer{
+    border-top:1px solid var(--border); padding:32px 24px; text-align:center;
+    font-family:var(--mono); font-size:0.75rem; color:var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">shadowstriker159<span>.sql</span></div>
+    <ul class="navlinks">
+      <li><a href="#inicio">inicio</a></li>
+      <li><a href="#presentacion">presentacion</a></li>
+      <li><a href="#evidencias">evidencias</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="inicio" class="hero">
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="terminal-title">consola — bases_de_datos_2</span>
+    </div>
+    <div class="terminal-body">
+      <div class="query-line">
+        <span class="kw">SELECT</span> * <span class="kw">FROM</span> presentacion
+        <span class="kw">WHERE</span> alumno = <span class="str">'ShadowStriker159'</span>;<span class="cursor"></span>
+      </div>
+      <div class="result">
+        <div class="result-row">
+          <div class="field"><div class="k">nombre</div><div class="v">[Tu nombre aquí]</div></div>
+          <div class="field"><div class="k">programa</div><div class="v">Ingeniería de Sistemas</div></div>
+          <div class="field"><div class="k">curso</div><div class="v">Bases de Datos 2</div></div>
+          <div class="field"><div class="k">estado</div><div class="v">en construcción 🛠️</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h1>Hola, soy <span class="accent">[Tu nombre aquí]</span> 👋</h1>
+  <p class="sub">Este es mi e-portafolio para el curso de Bases de Datos 2, donde iré publicando mis evidencias, scripts y proyectos durante el semestre.</p>
+</section>
+
+<section id="presentacion">
+  <div class="section-head">
+    <p class="eyebrow">tabla: presentacion</p>
+    <h2>Presentación</h2>
+  </div>
+
+  <div class="presentacion-grid">
+    <div class="avatar-wrap">
+      <div class="avatar">
+        <!-- Reemplaza el signo de interrogación por tu foto:
+             <img src="assets/foto.jpg" alt="Foto de [tu nombre]" style="display:block;"> -->
+        ?
+      </div>
+      <span class="avatar-caption">foto / avatar</span>
+    </div>
+
+    <div class="bio">
+      <p><span class="label">¿Cómo me gusta que me llamen?</span>[Escribe aquí tu nombre o apodo]</p>
+      <p><span class="label">Algo sobre mí</span>[Escribe aquí tu hobby, interés o algo que te represente]</p>
+      <p><span class="label">¿Por qué Bases de Datos 2 me va a ayudar profesionalmente?</span>[Escribe aquí tu razón concreta]</p>
+      <p class="placeholder">"Este semestre quiero demostrar que…" [completa la frase]</p>
+
+      <div class="video-block">
+        <p class="eyebrow" style="margin-bottom:10px;">video de presentación (90–120s)</p>
+        <div class="video-frame">
+          <!-- Cuando tengas el video, pega el link de YouTube/Drive embebido aquí y
+               quita display:none del iframe, o borra el div .video-placeholder -->
+          <iframe src="" title="Video de presentación" allowfullscreen></iframe>
+          <div class="video-placeholder">
+            <div class="play">▶</div>
+            <span>Aquí embeberás tu video<br>(YouTube / Drive)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="evidencias">
+  <div class="section-head">
+    <p class="eyebrow">esquema: evidencias</p>
+    <h2>Evidencias</h2>
+  </div>
+
+  <div class="schema-grid">
+    <div class="table-card">
+      <div class="table-card-head">SQL <span class="badge">vacío</span></div>
+      <div class="table-card-body">Próximamente: consultas y ejercicios de SQL del curso.</div>
+    </div>
+    <div class="table-card">
+      <div class="table-card-head">PL/SQL Scripts <span class="badge">vacío</span></div>
+      <div class="table-card-body">Próximamente: procedimientos, funciones y triggers.</div>
+    </div>
+    <div class="table-card">
+      <div class="table-card-head">NoSQL <span class="badge">vacío</span></div>
+      <div class="table-card-body">Próximamente: evidencias de bases de datos no relacionales.</div>
+    </div>
+    <div class="table-card">
+      <div class="table-card-head">Proyecto <span class="badge">vacío</span></div>
+      <div class="table-card-body">Próximamente: avances del proyecto final del curso.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 · ShadowStriker159 · Universidad El Bosque — Ingeniería de Sistemas
+</footer>
+
+</body>
+</html>
