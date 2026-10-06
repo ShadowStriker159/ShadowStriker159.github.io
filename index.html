@@ -47,7 +47,8 @@
 
     /* focus visibility */
     a:focus-visible,
-    button:focus-visible {
+    button:focus-visible,
+    summary:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 3px;
     }
@@ -450,6 +451,95 @@
       min-height: 70px;
     }
 
+    /* ---------- SQL FILES ---------- */
+    .sql-card {
+      grid-column: 1 / -1;
+    }
+
+    .sql-card:hover {
+      transform: none;
+    }
+
+    .sql-card .table-card-body {
+      padding: 0;
+      min-height: 0;
+    }
+
+    .file-item {
+      border-top: 1px solid var(--border);
+    }
+
+    .file-item:first-child {
+      border-top: 0;
+    }
+
+    .file-item summary {
+      cursor: pointer;
+      padding: 14px 16px;
+      list-style: none;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .file-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .file-item summary::before {
+      content: "▸ ";
+      color: var(--accent);
+    }
+
+    .file-item[open] summary::before {
+      content: "▾ ";
+    }
+
+    .file-item summary:hover {
+      color: var(--accent);
+    }
+
+    .file-item .desc {
+      display: block;
+      margin: 4px 0 0 16px;
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .file-actions {
+      padding: 0 16px 12px;
+    }
+
+    .file-actions a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+      border-radius: 6px;
+      padding: 4px 10px;
+      text-decoration: none;
+    }
+
+    .file-actions a:hover {
+      background: var(--accent-dim);
+      color: var(--text);
+    }
+
+    pre.code {
+      margin: 0;
+      padding: 16px;
+      max-height: 480px;
+      overflow: auto;
+      background: var(--bg-panel-2);
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: var(--text);
+      white-space: pre;
+    }
+
     footer {
       border-top: 1px solid var(--border);
       padding: 32px 24px;
@@ -542,10 +632,31 @@
     </div>
 
     <div class="schema-grid">
-      <div class="table-card">
-        <div class="table-card-head">SQL <span class="badge">vacío</span></div>
-        <div class="table-card-body">Próximamente: consultas y ejercicios de SQL del curso.</div>
+
+      <!-- SQL -->
+      <div class="table-card sql-card">
+        <div class="table-card-head">SQL <span class="badge">2 archivos</span></div>
+        <div class="table-card-body">
+
+          <details class="file-item" data-src="sql/laboratorio_metodos_join.sql">
+            <summary>laboratorio_metodos_join.sql
+              <span class="desc">Laboratorio de SQL Tuning: Nested Loops, Hash Join y Sort Merge Join.</span>
+            </summary>
+            <div class="file-actions"><a href="sql/laboratorio_metodos_join.sql" download>Descargar</a></div>
+            <pre class="code">Cargando…</pre>
+          </details>
+
+          <details class="file-item" data-src="sql/lab_optimizacion_indices_oracle.sql">
+            <summary>lab_optimizacion_indices_oracle.sql
+              <span class="desc">Optimización de consultas avanzadas e índices en Oracle (22 casos).</span>
+            </summary>
+            <div class="file-actions"><a href="sql/lab_optimizacion_indices_oracle.sql" download>Descargar</a></div>
+            <pre class="code">Cargando…</pre>
+          </details>
+
+        </div>
       </div>
+
       <div class="table-card">
         <div class="table-card-head">PL/SQL Scripts <span class="badge">vacío</span></div>
         <div class="table-card-body">Próximamente: procedimientos, funciones y triggers.</div>
@@ -564,6 +675,24 @@
   <footer>
     © 2026 · Erik Bautista · Universidad El Bosque — Ingeniería de Sistemas
   </footer>
+
+  <script>
+    // Carga el contenido de cada archivo .sql la primera vez que se abre el desplegable
+    document.querySelectorAll('.file-item').forEach(function (d) {
+      d.addEventListener('toggle', async function () {
+        if (!d.open || d.dataset.loaded) return;
+        var pre = d.querySelector('pre');
+        try {
+          var r = await fetch(d.dataset.src);
+          if (!r.ok) throw new Error(r.status);
+          pre.textContent = await r.text();
+          d.dataset.loaded = '1';
+        } catch (e) {
+          pre.textContent = 'No se pudo cargar el archivo. Usa el botón Descargar.';
+        }
+      });
+    });
+  </script>
 
 </body>
 
