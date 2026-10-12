@@ -452,15 +452,15 @@
     }
 
     /* ---------- SQL FILES ---------- */
-    .sql-card {
+    .file-card {
       grid-column: 1 / -1;
     }
 
-    .sql-card:hover {
+    .file-card:hover {
       transform: none;
     }
 
-    .sql-card .table-card-body {
+    .file-card .table-card-body {
       padding: 0;
       min-height: 0;
     }
@@ -634,32 +634,43 @@
     <div class="schema-grid">
 
       <!-- SQL -->
-      <div class="table-card sql-card">
+      <div class="table-card file-card">
         <div class="table-card-head">SQL <span class="badge">2 archivos</span></div>
         <div class="table-card-body">
 
-          <details class="file-item" data-src="sql/laboratorio_metodos_join.sql">
+          <details class="file-item" data-src="laboratorio_metodos_join.sql">
             <summary>laboratorio_metodos_join.sql
               <span class="desc">Laboratorio de SQL Tuning: Nested Loops, Hash Join y Sort Merge Join.</span>
             </summary>
-            <div class="file-actions"><a href="sql/laboratorio_metodos_join.sql" download>Descargar</a></div>
+            <div class="file-actions"><a href="laboratorio_metodos_join.sql" download>Descargar</a></div>
             <pre class="code">Cargando…</pre>
           </details>
 
-          <details class="file-item" data-src="sql/lab_optimizacion_indices_oracle.sql">
+          <details class="file-item" data-src="lab_optimizacion_indices_oracle.sql">
             <summary>lab_optimizacion_indices_oracle.sql
               <span class="desc">Optimización de consultas avanzadas e índices en Oracle (22 casos).</span>
             </summary>
-            <div class="file-actions"><a href="sql/lab_optimizacion_indices_oracle.sql" download>Descargar</a></div>
+            <div class="file-actions"><a href="lab_optimizacion_indices_oracle.sql" download>Descargar</a></div>
             <pre class="code">Cargando…</pre>
           </details>
 
         </div>
       </div>
 
-      <div class="table-card">
-        <div class="table-card-head">PL/SQL Scripts <span class="badge">vacío</span></div>
-        <div class="table-card-body">Próximamente: procedimientos, funciones y triggers.</div>
+      <!-- PL/SQL -->
+      <div class="table-card file-card">
+        <div class="table-card-head">PL/SQL Scripts <span class="badge">1 archivo</span></div>
+        <div class="table-card-body">
+
+          <details class="file-item" data-src="TALLER_PLSQL_GRUPO_2.sql">
+            <summary>TALLER_PLSQL_GRUPO_2.sql
+              <span class="desc">Taller PL/SQL (Grupo 2): procedimientos, funciones, cursores, excepciones, disparadores y caso integrador.</span>
+            </summary>
+            <div class="file-actions"><a href="TALLER_PLSQL_GRUPO_2.sql" download>Descargar</a></div>
+            <pre class="code">Cargando…</pre>
+          </details>
+
+        </div>
       </div>
       <div class="table-card">
         <div class="table-card-head">NoSQL <span class="badge">vacío</span></div>
