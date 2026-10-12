@@ -451,94 +451,50 @@
       min-height: 70px;
     }
 
-    /* ---------- SQL FILES ---------- */
-    .file-card {
-      grid-column: 1 / -1;
-    }
+    /* ---------- EVIDENCIAS (fichas) ---------- */
+    .file-card { grid-column: 1 / -1; }
+    .file-card:hover { transform: none; }
+    .file-card .table-card-body { padding: 0; min-height: 0; }
 
-    .file-card:hover {
-      transform: none;
+    .ev { border-top: 1px solid var(--border); }
+    .ev:first-child { border-top: 0; }
+    .ev summary {
+      cursor: pointer; padding: 16px; list-style: none;
+      font-family: var(--mono); font-size: 0.9rem; color: var(--text);
     }
-
-    .file-card .table-card-body {
-      padding: 0;
-      min-height: 0;
+    .ev summary::-webkit-details-marker { display: none; }
+    .ev summary::before { content: "▸ "; color: var(--accent); }
+    .ev[open] summary::before { content: "▾ "; }
+    .ev summary:hover { color: var(--accent); }
+    .ev .desc {
+      display: block; margin: 4px 0 0 16px;
+      font-family: var(--sans); font-size: 0.8rem; color: var(--muted);
     }
-
-    .file-item {
-      border-top: 1px solid var(--border);
+    .ev-body { padding: 4px 16px 20px; display: grid; gap: 16px; }
+    .ev-block h4 {
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
+      color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 6px;
     }
-
-    .file-item:first-child {
-      border-top: 0;
+    .ev-block p, .ev-block li { color: var(--text); font-size: 0.88rem; }
+    .ev-block ul { padding-left: 18px; display: grid; gap: 4px; }
+    .ev-block code {
+      font-family: var(--mono); font-size: 0.8rem; color: var(--amber);
+      background: var(--bg-panel-2); border-radius: 4px; padding: 1px 5px;
     }
-
-    .file-item summary {
-      cursor: pointer;
-      padding: 14px 16px;
-      list-style: none;
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      color: var(--text);
+    pre.snippet {
+      margin: 0; padding: 14px 16px; overflow-x: auto;
+      background: var(--bg-panel-2); border: 1px solid var(--border);
+      border-radius: 8px; font-family: var(--mono); font-size: 0.78rem;
+      line-height: 1.5; color: var(--text); white-space: pre;
     }
-
-    .file-item summary::-webkit-details-marker {
-      display: none;
+    .ev-links { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ev-links a {
+      font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
+      border: 1px solid var(--accent-dim); border-radius: 6px;
+      padding: 6px 12px; text-decoration: none;
     }
-
-    .file-item summary::before {
-      content: "▸ ";
-      color: var(--accent);
-    }
-
-    .file-item[open] summary::before {
-      content: "▾ ";
-    }
-
-    .file-item summary:hover {
-      color: var(--accent);
-    }
-
-    .file-item .desc {
-      display: block;
-      margin: 4px 0 0 16px;
-      font-family: var(--sans);
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .file-actions {
-      padding: 0 16px 12px;
-    }
-
-    .file-actions a {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--accent);
-      border: 1px solid var(--accent-dim);
-      border-radius: 6px;
-      padding: 4px 10px;
-      text-decoration: none;
-    }
-
-    .file-actions a:hover {
-      background: var(--accent-dim);
-      color: var(--text);
-    }
-
-    pre.code {
-      margin: 0;
-      padding: 16px;
-      max-height: 480px;
-      overflow: auto;
-      background: var(--bg-panel-2);
-      border-top: 1px solid var(--border);
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      line-height: 1.5;
-      color: var(--text);
-      white-space: pre;
-    }
+    .ev-links a:hover { background: var(--accent-dim); color: var(--text); }
 
     footer {
       border-top: 1px solid var(--border);
@@ -635,23 +591,73 @@
 
       <!-- SQL -->
       <div class="table-card file-card">
-        <div class="table-card-head">SQL <span class="badge">2 archivos</span></div>
+        <div class="table-card-head">SQL <span class="badge">2 evidencias</span></div>
         <div class="table-card-body">
 
-          <details class="file-item" data-src="laboratorio_metodos_join.sql">
-            <summary>laboratorio_metodos_join.sql
-              <span class="desc">Laboratorio de SQL Tuning: Nested Loops, Hash Join y Sort Merge Join.</span>
+          <details class="ev">
+            <summary>Laboratorio de métodos de Join
+              <span class="desc">SQL Tuning · Nested Loops vs Hash Join vs Sort Merge Join</span>
             </summary>
-            <div class="file-actions"><a href="laboratorio_metodos_join.sql" download>Descargar</a></div>
-            <pre class="code">Cargando…</pre>
+            <div class="ev-body">
+              <div class="ev-block"><h4>Contexto</h4>
+                <p>Laboratorio basado en el capítulo 9.2 «Joins Methods» del Oracle Database SQL Tuning Guide. Se plantean tres escenarios y en cada uno se fuerza cada método de join con hints para comparar los planes de ejecución.</p></div>
+              <div class="ev-block"><h4>Objetivo</h4>
+                <p>Entender en qué situación el optimizador de Oracle favorece cada método de join y por qué.</p></div>
+              <div class="ev-block"><h4>Aspectos relevantes de la solución</h4>
+                <ul>
+                  <li><strong>Escenario A:</strong> 200 pedidos filtrados a 10 contra 50.000 productos con índice por clave primaria. Gana <code>NESTED LOOPS</code>, porque busca cada producto por índice.</li>
+                  <li><strong>Escenario B:</strong> dos tablas grandes, sin índices y con unión por igualdad. Gana <code>HASH JOIN</code>: Nested Loops tendría que escanear la tabla grande una y otra vez, y Sort Merge pagaría el costo de ordenar.</li>
+                  <li><strong>Escenario C:</strong> unión por rango (<code>BETWEEN</code>) entre 50.000 clientes y 5 rangos de edad. Un hash join solo sirve para igualdad, así que el hint no se puede aplicar y compiten Nested Loops y Sort Merge.</li>
+                  <li>Se usó <code>EXPLAIN PLAN</code> con <code>DBMS_XPLAN.DISPLAY</code> y <code>NO_PARALLEL</code> para que el paralelismo no distorsione la comparación.</li>
+                </ul></div>
+              <div class="ev-block"><h4>Resultados</h4>
+                <p>Cada escenario se resolvió comparando el costo y las operaciones de los tres planes. El método ganador coincide con el que predice la teoría para cada caso.</p>
+                <!-- Agrega aquí el Cost de cada plan que obtuviste en tu ejecución -->
+              </div>
+              <div class="ev-block"><h4>Lo aprendido</h4>
+                <p>No existe un método de join «mejor» en general: depende del tamaño de las tablas, de si hay índice sobre la columna de unión y del tipo de condición (igualdad o rango). Los hints sirven para comparar, pero normalmente conviene dejar que el optimizador decida con buenas estadísticas.</p></div>
+              <div class="ev-block"><h4>Fragmento clave</h4>
+<pre class="snippet">-- Mismo join, tres métodos forzados con hints
+SELECT /*+ USE_NL(pe pr) */    ...   -- Nested Loops
+SELECT /*+ USE_HASH(pe pr) */  ...   -- Hash Join
+SELECT /*+ USE_MERGE(pe pr) */ ...   -- Sort Merge Join
+FROM   pedidos pe
+JOIN   productos pr ON pe.id_producto = pr.id_producto
+WHERE  pe.id_pedido &lt;= 10;</pre></div>
+              <div class="ev-links"><a href="https://github.com/ShadowStriker159/ShadowStriker159.github.io/blob/main/laboratorio_metodos_join.sql" target="_blank" rel="noopener">Ver código en GitHub ↗</a><a href="laboratorio_metodos_join.sql" download>Descargar .sql</a></div>
+            </div>
           </details>
 
-          <details class="file-item" data-src="lab_optimizacion_indices_oracle.sql">
-            <summary>lab_optimizacion_indices_oracle.sql
-              <span class="desc">Optimización de consultas avanzadas e índices en Oracle (22 casos).</span>
+          <details class="ev">
+            <summary>Optimización de consultas avanzadas e índices en Oracle
+              <span class="desc">22 casos poco comunes de tuning · nivel avanzado</span>
             </summary>
-            <div class="file-actions"><a href="lab_optimizacion_indices_oracle.sql" download>Descargar</a></div>
-            <pre class="code">Cargando…</pre>
+            <div class="ev-body">
+              <div class="ev-block"><h4>Contexto</h4>
+                <p>Laboratorio de nivel avanzado, escrito en SQL puro, que recorre 22 casos raros de optimización en Oracle donde el plan de ejecución no se comporta como se esperaría.</p></div>
+              <div class="ev-block"><h4>Objetivo</h4>
+                <p>Reconocer situaciones en las que un índice no se usa, el optimizador estima mal o una consulta devuelve resultados inesperados, y saber cómo diagnosticarlas y corregirlas.</p></div>
+              <div class="ev-block"><h4>Aspectos relevantes de la solución</h4>
+                <ul>
+                  <li><strong>Índices y tipos de datos:</strong> NULLs en índices B-tree, conversión implícita de tipos, Index Skip Scan, índices globales vs locales en tablas particionadas y bitmap join.</li>
+                  <li><strong>Estadísticas y estabilidad de planes:</strong> estadísticas extendidas, bind peeking, cardinality feedback, SQL Plan Baselines y SQL Plan Directives.</li>
+                  <li><strong>Transformaciones del optimizador:</strong> OR Expansion, Table Expansion, Join Factorization, Bloom Filters y planes adaptativos.</li>
+                  <li><strong>Herramientas:</strong> SQL Tuning Advisor (<code>DBMS_SQLTUNE</code>), indexación automática y Hint Usage Reports.</li>
+                  <li>El caso 22 integra varios temas en un bug «intermitente» típico de producción.</li>
+                </ul></div>
+              <div class="ev-block"><h4>Resultados</h4>
+                <p>Cada caso incluye su preparación, la consulta problemática, el plan observado, la corrección y preguntas de análisis. Algunas secciones requieren Oracle 12c/19c o superior y privilegios de DBA.</p></div>
+              <div class="ev-block"><h4>Lo aprendido</h4>
+                <p>Un ejemplo claro es <code>NOT IN</code> contra <code>NOT EXISTS</code>: si la subconsulta devuelve aunque sea un NULL, <code>NOT IN</code> no devuelve ninguna fila, mientras que <code>NOT EXISTS</code> sigue funcionando. Más en general, muchos problemas de rendimiento vienen de estadísticas desactualizadas, tipos de datos mal comparados o NULLs, y no de la falta de un índice.</p></div>
+              <div class="ev-block"><h4>Fragmento clave (caso 18)</h4>
+<pre class="snippet">-- NOT IN: devuelve 0 filas si la subconsulta trae algún NULL
+... WHERE id_depto NOT IN (SELECT id_depto FROM lab_notin_emp);
+
+-- NOT EXISTS: ignora los NULL de la subconsulta
+... WHERE NOT EXISTS (SELECT 1 FROM lab_notin_emp e
+                      WHERE  e.id_depto = d.id_depto);</pre></div>
+              <div class="ev-links"><a href="https://github.com/ShadowStriker159/ShadowStriker159.github.io/blob/main/lab_optimizacion_indices_oracle.sql" target="_blank" rel="noopener">Ver código en GitHub ↗</a><a href="lab_optimizacion_indices_oracle.sql" download>Descargar .sql</a></div>
+            </div>
           </details>
 
         </div>
@@ -659,19 +665,49 @@
 
       <!-- PL/SQL -->
       <div class="table-card file-card">
-        <div class="table-card-head">PL/SQL Scripts <span class="badge">1 archivo</span></div>
+        <div class="table-card-head">PL/SQL Scripts <span class="badge">1 evidencia</span></div>
         <div class="table-card-body">
 
-          <details class="file-item" data-src="TALLER_PLSQL_GRUPO_2.sql">
-            <summary>TALLER_PLSQL_GRUPO_2.sql
-              <span class="desc">Taller PL/SQL (Grupo 2): procedimientos, funciones, cursores, excepciones, disparadores y caso integrador.</span>
+          <details class="ev">
+            <summary>Taller PL/SQL — Grupo 2
+              <span class="desc">Sistema de inventario y pedidos · trabajo en equipo de tres integrantes</span>
             </summary>
-            <div class="file-actions"><a href="TALLER_PLSQL_GRUPO_2.sql" download>Descargar</a></div>
-            <pre class="code">Cargando…</pre>
+            <div class="ev-body">
+              <div class="ev-block"><h4>Contexto</h4>
+                <p>Taller del curso (50 puntos) sobre un esquema de inventario con productos, categorías, clientes, pedidos y movimientos de stock. Cada objeto debía llevar su justificación de diseño y un análisis de cómo se comporta ante concurrencia, volumen y errores. Lo desarrollamos entre Erik Bautista, Felipe López y Mariana Durán.</p></div>
+              <div class="ev-block"><h4>Objetivo</h4>
+                <p>Aplicar los principales elementos de PL/SQL a un caso realista y argumentar cada decisión técnica.</p></div>
+              <div class="ev-block"><h4>Aspectos relevantes de la solución</h4>
+                <ul>
+                  <li><strong>Procedimientos:</strong> <code>SP_REGISTRAR_PRODUCTO</code>, <code>SP_AJUSTAR_STOCK</code> y <code>SP_CREAR_PEDIDO</code>, con validaciones antes de consumir secuencias.</li>
+                  <li><strong>Funciones:</strong> <code>FN_STOCK_DISPONIBLE</code>, <code>FN_CUPO_DISPONIBLE</code> y <code>FN_CALCULAR_DESCUENTO</code>.</li>
+                  <li><strong>Cursores:</strong> cursores explícitos, ciclos <code>FOR</code> y operaciones masivas con <code>FORALL</code>.</li>
+                  <li><strong>Excepciones:</strong> excepciones propias, <code>SP_VALIDAR_DESPACHO</code>, <code>SP_ANULAR_PEDIDO</code> y <code>SP_REGISTRAR_ERROR</code> como transacción autónoma, para que el log del error sobreviva al <code>ROLLBACK</code>.</li>
+                  <li><strong>Disparadores:</strong> como <code>TRG_CLIENTE_BI</code>, que normaliza el nombre y asigna el id y el estado antes de insertar.</li>
+                  <li><strong>Caso integrador:</strong> el paquete <code>PKG_VENTAS</code> con <code>SP_FACTURAR_PEDIDO</code>, que reúne cursor, descuento, validación de cupo y <code>SAVEPOINT</code>.</li>
+                </ul></div>
+              <div class="ev-block"><h4>Resultados</h4>
+                <p>Se entregó el script completo junto con un documento con las salidas de <code>DBMS_OUTPUT</code> de cada prueba, además de una sustentación de 20 minutos por grupo.</p></div>
+              <div class="ev-block"><h4>Lo aprendido</h4>
+                <p>Un ejemplo es el código duplicado: no basta con un <code>SELECT</code> previo, porque otra sesión puede insertar el mismo valor entre el <code>SELECT</code> y el <code>INSERT</code>. La restricción única es la que lo garantiza y el procedimiento solo traduce el error. También aprendimos a justificar por qué se elige una construcción y no otra, no solo a describir qué hace el código.</p></div>
+              <div class="ev-block"><h4>Fragmento clave</h4>
+<pre class="snippet">INSERT INTO PRODUCTO (...)
+VALUES (SEQ_PRODUCTO.NEXTVAL, ...)
+RETURNING id_producto INTO PARAM_idProducto;
+EXCEPTION
+  WHEN DUP_VAL_ON_INDEX THEN
+    IF INSTR(UPPER(SQLERRM), 'UK_PRODUCTO_CODIGO') &gt; 0 THEN
+      RAISE e_codigo_duplicado;
+    ELSE
+      RAISE;  -- otra restriccion (por ejemplo la PK): no mentir
+    END IF;</pre></div>
+              <div class="ev-links"><a href="https://github.com/ShadowStriker159/ShadowStriker159.github.io/blob/main/TALLER_PLSQL_GRUPO_2.sql" target="_blank" rel="noopener">Ver código en GitHub ↗</a><a href="TALLER_PLSQL_GRUPO_2.sql" download>Descargar .sql</a></div>
+            </div>
           </details>
 
         </div>
       </div>
+
       <div class="table-card">
         <div class="table-card-head">NoSQL <span class="badge">vacío</span></div>
         <div class="table-card-body">Próximamente: evidencias de bases de datos no relacionales.</div>
@@ -686,25 +722,6 @@
   <footer>
     © 2026 · Erik Bautista · Universidad El Bosque — Ingeniería de Sistemas
   </footer>
-
-  <script>
-    // Carga el contenido de cada archivo .sql la primera vez que se abre el desplegable
-    document.querySelectorAll('.file-item').forEach(function (d) {
-      d.addEventListener('toggle', async function () {
-        if (!d.open || d.dataset.loaded) return;
-        var pre = d.querySelector('pre');
-        try {
-          var r = await fetch(d.dataset.src);
-          if (!r.ok) throw new Error(r.status);
-          pre.textContent = await r.text();
-          d.dataset.loaded = '1';
-        } catch (e) {
-          pre.textContent = 'No se pudo cargar el archivo. Usa el botón Descargar.';
-        }
-      });
-    });
-  </script>
-
 </body>
 
 </html>
