@@ -708,14 +708,173 @@ EXCEPTION
         </div>
       </div>
 
-      <div class="table-card">
-        <div class="table-card-head">NoSQL <span class="badge">vacío</span></div>
-        <div class="table-card-body">Próximamente: evidencias de bases de datos no relacionales.</div>
+      <!-- NoSQL -->
+      <div class="table-card file-card">
+        <div class="table-card-head">NoSQL <span class="badge">2 evidencias</span></div>
+        <div class="table-card-body">
+
+          <details class="ev">
+            <summary>Taller MQL: consultas, agregación, índices y modelado
+              <span class="desc">MongoDB · sample_mflix · 15 puntos y 2 modelos en Hackolade · trabajo en pareja</span>
+            </summary>
+            <div class="ev-body">
+              <div class="ev-block"><h4>Contexto</h4>
+                <p>Taller de Bases de Datos 2 que hicimos Erik Bautista y Felipe López. Las partes A a C se resuelven sobre sample_mflix, el dataset de películas de MongoDB Atlas. La parte D pide modelar dos casos con patrones de diseño documental.</p></div>
+              <div class="ev-block"><h4>Objetivo</h4>
+                <p>Practicar consultas, agregaciones, escritura e índices en MQL, y justificar las decisiones de modelado.</p></div>
+              <div class="ev-block"><h4>Aspectos relevantes de la solución</h4>
+                <ul>
+                  <li>Parte A: filtros sobre arreglos (<code>cast</code>, <code>genres</code>, <code>directors</code>) con <code>$all</code>, <code>$size</code>, <code>$ne</code>, <code>$or</code>, <code>$exists</code> y expresiones regulares. Por ejemplo, 176 dramas entre 2000 y 2010 con rating de 8 o más, y 971 películas con exactamente tres géneros que incluyen Comedy y Romance.</li>
+                  <li>Parte B: promedio y máximo por género, top de directores, películas por década, un <code>$lookup</code> entre comments y movies, y los usuarios con más de 250 comentarios. Como <code>imdb.rating</code> trae valores vacíos, filtramos por tipo numérico.</li>
+                  <li>Parte C: la colección <code>peliculas_pareja</code> se creó con <code>$out</code> y <code>$switch</code> (Alta, Media o Baja). Después hicimos un <code>updateMany</code> sobre 231 películas Media, un <code>deleteMany</code> de las 62 Baja y un <code>explain("executionStats")</code> antes y después de crear un índice compuesto con la regla ESR.</li>
+                  <li>Parte D: dos modelos. Uno es una plataforma de domicilios (Extended Reference, Subset, Computed y Attribute) y el otro un monitoreo de calidad del aire en Bogotá (Bucket, Computed y Schema Versioning). Cada uno lleva JSON de ejemplo, índices y dos consultas MQL.</li>
+                </ul></div>
+              <div class="ev-block"><h4>Resultados</h4>
+                <p>El zip trae el script <code>.mongodb.js</code>, el PDF con las capturas y la explicación de cada punto, y los dos modelos exportados de Hackolade. Sin índice, la consulta del punto 1 hace <code>COLLSCAN</code>. Con el índice compuesto pasa a <code>IXSCAN</code> y examina menos documentos.</p></div>
+              <div class="ev-block"><h4>Lo aprendido</h4>
+                <p>En una agregación, el texto vacío se ordena después de cualquier número, así que un rating <code>""</code> habría caído en la categoría Alta. Filtrar con <code>$type: "number"</code> evita ese error. En el caso del aire, el patrón Bucket reduce 288.000 documentos diarios (200 sensores, una lectura por minuto) a 4.800, es decir 60 veces menos.</p></div>
+              <div class="ev-block"><h4>Fragmento clave (punto 14)</h4>
+<pre class="snippet">// Indice ESR: igualdad (genres), orden (imdb.rating), rango (year)
+db.movies.createIndex(
+  { genres: 1, "imdb.rating": -1, year: 1 },
+  { name: "idx_genres_rating_year" }
+);</pre></div>
+              <div class="ev-links"><a href="https://github.com/ShadowStriker159/ShadowStriker159.github.io/blob/main/Taller_Bautista_Lopez.zip" target="_blank" rel="noopener">Ver en GitHub ↗</a><a href="Taller_Bautista_Lopez.zip" download>Descargar .zip</a></div>
+            </div>
+          </details>
+
+          <details class="ev">
+            <summary>Práctica MQL individual: 30 ejercicios sobre Airbnb
+              <span class="desc">MongoDB · sample_airbnb · colección listingsAndReviews</span>
+            </summary>
+            <div class="ev-body">
+              <div class="ev-block"><h4>Contexto</h4>
+                <p>Práctica individual de MQL sobre la colección listingsAndReviews de sample_airbnb. Tiene 30 ejercicios agrupados por tipo de operación.</p></div>
+              <div class="ev-block"><h4>Objetivo</h4>
+                <p>Manejar las operaciones CRUD y el pipeline de agregación sobre documentos con objetos anidados y arreglos.</p></div>
+              <div class="ev-block"><h4>Aspectos relevantes de la solución</h4>
+                <ul>
+                  <li>Ejercicios 1 a 5, inserciones: <code>insertOne</code> con objeto anidado, <code>insertMany</code> con arreglos y una inserción con <code>_id</code> repetido que debe fallar con E11000.</li>
+                  <li>Ejercicios 6 a 15, consultas: <code>$gt</code>, <code>$lt</code>, <code>$and</code>, <code>$in</code>, regex sin distinguir mayúsculas, búsqueda en arreglos con <code>$size</code>, proyección, orden y límite.</li>
+                  <li>Ejercicios 16 a 20, actualizaciones: <code>$set</code>, <code>$push</code>, <code>$inc</code>, <code>$pull</code> y un upsert con <code>$setOnInsert</code>.</li>
+                  <li>Ejercicios 21 a 30, agregaciones: <code>$group</code>, <code>$unwind</code>, <code>$project</code> con <code>$toInt</code>, <code>$bucket</code> por rangos de precio, <code>$lookup</code> y conteo por año con <code>$year</code>.</li>
+                </ul></div>
+              <div class="ev-block"><h4>Resultados</h4>
+                <p>Un solo script con los 30 ejercicios comentados. El 28 es teórico, porque su <code>$lookup</code> apunta a una colección <code>hosts</code> que no existe en el dataset.</p></div>
+              <div class="ev-block"><h4>Lo aprendido</h4>
+                <p>El precio se guarda como decimal, así que para usarlo en <code>$bucket</code> hubo que convertirlo antes con <code>$toDouble</code>. También vi que <code>{ last_review: null }</code> encuentra tanto los documentos sin el campo como los que lo tienen en nulo.</p></div>
+              <div class="ev-block"><h4>Fragmento clave (ejercicio 27)</h4>
+<pre class="snippet">db.listingsAndReviews.aggregate([
+  { $match: { price: { $exists: true } } },
+  { $addFields: { precio_num: { $toDouble: "$price" } } },
+  { $bucket: { groupBy: "$precio_num",
+      boundaries: [0, 101, 301, 1001], default: "1000+",
+      output: { cantidad: { $sum: 1 } } } }
+]);</pre></div>
+              <div class="ev-links"><a href="https://github.com/ShadowStriker159/ShadowStriker159.github.io/blob/main/taller_MQL_Practica_BautistaErik.js" target="_blank" rel="noopener">Ver código en GitHub ↗</a><a href="taller_MQL_Practica_BautistaErik.js" download>Descargar .js</a></div>
+            </div>
+          </details>
+
+        </div>
       </div>
-      <div class="table-card">
-        <div class="table-card-head">Proyecto <span class="badge">vacío</span></div>
-        <div class="table-card-body">Próximamente: avances del proyecto final del curso.</div>
+
+      <!-- Proyecto -->
+      <div class="table-card file-card">
+        <div class="table-card-head">Proyecto <span class="badge">3 evidencias</span></div>
+        <div class="table-card-body">
+
+          <details class="ev">
+            <summary>Proyecto final: base relacional en MySQL
+              <span class="desc">SistemaHorario · scripts SQL · lógica de negocio en la base de datos</span>
+            </summary>
+            <div class="ev-body">
+              <div class="ev-block"><h4>Contexto</h4>
+                <p>Scripts MySQL 8.4 de SistemaHorario, el sistema de gestión de horarios académicos del proyecto final, que hicimos Felipe López y Erik Bautista. Las reglas de negocio viven en la base de datos.</p></div>
+              <div class="ev-block"><h4>Objetivo</h4>
+                <p>Implementar el esquema y las reglas de inscripción de modo que se cumplan aunque alguien escriba directo en las tablas.</p></div>
+              <div class="ev-block"><h4>Aspectos relevantes de la solución</h4>
+                <ul>
+                  <li>Esquema de 19 tablas normalizado hasta 3FN, con relaciones 1:1, 1:N y N:M. <code>aula</code> es una entidad débil con llave compuesta.</li>
+                  <li>Los procedimientos <code>sp_inscribir_estudiante</code> y <code>sp_retirar_estudiante</code> llevan su propia transacción, hacen <code>ROLLBACK</code> ante cualquier error y lanzan errores propios del 30001 al 30005. La inscripción bloquea la fila del grupo con <code>FOR UPDATE</code>, para que dos estudiantes no tomen el último cupo a la vez.</li>
+                  <li>Dos funciones (<code>fn_cupos_disponibles</code> y <code>fn_creditos_inscritos</code>), tres triggers para validar el cupo y auditar inscripciones y retiros, y tres restricciones <code>CHECK</code>.</li>
+                  <li>Dos usuarios con privilegios mínimos: <code>horarios_app</code> y <code>horarios_lector</code>.</li>
+                </ul></div>
+              <div class="ev-block"><h4>Resultados</h4>
+                <p>Seis scripts: esquema, lógica de negocio, datos de prueba, pruebas, secciones de demostración y reportes. Las 33 pruebas automáticas imprimen OK o FALLA. Los reportes son 18 consultas y 2 vistas que cubren cupos por grupo, carga docente, ocupación de aulas, horario del estudiante y control de choques.</p></div>
+              <div class="ev-block"><h4>Lo aprendido</h4>
+                <p>Un procedimiento con su propio <code>COMMIT</code> no se mezcla con una transacción de Spring, por eso el servicio de inscripción corre sin <code>@Transactional</code>. Repetir la validación de cupo en un trigger deja una segunda barrera si alguien inserta directo. Al documentar el código también aparecieron límites: la tabla <code>seccion</code> no impide por sí sola los choques de aula o docente, y la inscripción no valida prerrequisitos.</p></div>
+              <div class="ev-block"><h4>Fragmento clave</h4>
+<pre class="snippet">START TRANSACTION;
+-- Bloquea la fila del grupo: dos inscripciones simultaneas
+-- no pueden pasarse del cupo
+SELECT g.estado_grupo, g.cupo_maximo, g.id_curso, c.nombre_curso
+  INTO v_estado_grupo, v_cupo_max, v_id_curso, v_nombre_curso
+  FROM grupo g JOIN curso c ON c.id_curso = g.id_curso
+ WHERE g.id_grupo = p_id_grupo
+   FOR UPDATE;</pre></div>
+              <div class="ev-links"><a href="https://github.com/ShadowStriker159/ShadowStriker159.github.io/blob/main/ProyectoFinal_SQL.zip" target="_blank" rel="noopener">Ver en GitHub ↗</a><a href="ProyectoFinal_SQL.zip" download>Descargar .zip</a></div>
+            </div>
+          </details>
+
+          <details class="ev">
+            <summary>Proyecto final: base documental en MongoDB
+              <span class="desc">SistemaHorario · horarios_nosql · historial, bitácora y notificaciones</span>
+            </summary>
+            <div class="ev-body">
+              <div class="ev-block"><h4>Contexto</h4>
+                <p>Base horarios_nosql en MongoDB 8.0, que complementa a MySQL en SistemaHorario. Guarda lo que el modelo relacional descarta: cada generación reemplaza el horario vigente y las inscripciones rechazadas no dejan rastro.</p></div>
+              <div class="ev-block"><h4>Objetivo</h4>
+                <p>Conservar historial y trazabilidad en documentos de forma variable sin tocar la integridad transaccional de MySQL.</p></div>
+              <div class="ev-block"><h4>Aspectos relevantes de la solución</h4>
+                <ul>
+                  <li>Tres colecciones con validación <code>$jsonSchema</code> e índices: <code>historial_generaciones</code> (una foto de cada generación, con sus secciones embebidas), <code>bitacora_eventos</code> (inscripciones y retiros, incluidos los rechazados) y <code>notificaciones</code> (correos de verificación).</li>
+                  <li>CRUD con inserción, actualización de elementos dentro de arreglos y depuración de notificaciones viejas.</li>
+                  <li>Cinco consultas complejas, entre ellas los rechazos por falta de cupo y las generaciones con una materia en cierto día, que consulta el arreglo embebido.</li>
+                  <li>Siete agregaciones: eventos por tipo, demanda real por grupo, motivos de rechazo, secciones por día con <code>$unwind</code>, carga docente, tasa de éxito y serie diaria con <code>$dateToString</code>.</li>
+                </ul></div>
+              <div class="ev-block"><h4>Resultados</h4>
+                <p>Cuatro scripts de mongosh: crear colecciones, datos de ejemplo, CRUD con consultas y agregaciones. Las mismas agregaciones alimentan el endpoint <code>/api/horarios/nosql/resumen</code> del back.</p></div>
+              <div class="ev-block"><h4>Lo aprendido</h4>
+                <p>Guardar una foto de cada generación resolvió la auditoría sin cambiar el modelo relacional, y si MongoDB cae las inscripciones siguen funcionando. Falta el patrón outbox, que evitaría que la bitácora pierda eventos si el servicio se cae.</p></div>
+              <div class="ev-block"><h4>Fragmento clave (A2)</h4>
+<pre class="snippet">// Demanda real: inscripciones exitosas por grupo
+db.bitacora_eventos.aggregate([
+  { $match: { tipo: "INSCRIPCION", resultado: "OK" } },
+  { $group: { _id: "$grupo", inscripciones: { $sum: 1 } } },
+  { $sort: { inscripciones: -1 } }
+]);</pre></div>
+              <div class="ev-links"><a href="https://github.com/ShadowStriker159/ShadowStriker159.github.io/blob/main/ProyectoFinal_NoSQL.zip" target="_blank" rel="noopener">Ver en GitHub ↗</a><a href="ProyectoFinal_NoSQL.zip" download>Descargar .zip</a></div>
+            </div>
+          </details>
+
+          <details class="ev">
+            <summary>Proyecto final: documentación y gestión
+              <span class="desc">SistemaHorario · 12 documentos Word y 4 diagramas</span>
+            </summary>
+            <div class="ev-body">
+              <div class="ev-block"><h4>Contexto</h4>
+                <p>Documentación del proyecto final de Felipe López Almanza y Erik Bautista (noviembre de 2026). El sistema tiene un front en Jakarta Faces, una API REST en Spring Boot con Java 21, MySQL 8.4 y MongoDB 8.0. Las dos bases corren en máquinas virtuales con Ubuntu Server 24.04 LTS.</p></div>
+              <div class="ev-block"><h4>Objetivo</h4>
+                <p>Dejar por escrito el problema, las decisiones técnicas, la implementación y la gestión del proyecto.</p></div>
+              <div class="ev-block"><h4>Aspectos relevantes de la solución</h4>
+                <ul>
+                  <li>Propuesta, supuestos e informe ejecutivo, con cada decisión técnica y sus alternativas. Ubuntu frente a RHEL, por ejemplo, salió con un costo a cinco años de USD 17.572 frente a USD 19.592.</li>
+                  <li>Análisis de MySQL frente a MongoDB, diccionario de datos y documentos de implementación de las bases, de las máquinas virtuales y del modelo en MongoDB.</li>
+                  <li>Diagramas entidad-relación, relacional, de tablas reducidas y de arquitectura.</li>
+                  <li>Gestión con 14 requerimientos funcionales y 9 no funcionales, 8 riesgos, matriz RACI, EDT y un cronograma de 16 semanas con 6 hitos.</li>
+                  <li>Algoritmo genético para generar el horario: población de 80, hasta 500 generaciones, cruce de 0,85 y mutación de 0,12.</li>
+                </ul></div>
+              <div class="ev-block"><h4>Resultados</h4>
+                <p>Doce documentos Word y cuatro diagramas, más el enlace al repositorio del código del sistema.</p></div>
+              <div class="ev-block"><h4>Lo aprendido</h4>
+                <p>Los documentos de un proyecto anterior, que usamos como punto de partida, traían versiones, fechas y licencias erróneas. Las corregimos contrastando con fuentes oficiales. Documentar el código también mostró pendientes, como guardar las claves de usuario con hash en vez de texto plano.</p></div>
+              <div class="ev-links"><a href="https://github.com/ShadowStriker159/SistemaGestionHorarios" target="_blank" rel="noopener">Repositorio del sistema ↗</a><a href="https://github.com/ShadowStriker159/ShadowStriker159.github.io/blob/main/ProyectoFinal_Documentacion.zip" target="_blank" rel="noopener">Ver en GitHub ↗</a><a href="ProyectoFinal_Documentacion.zip" download>Descargar .zip</a></div>
+            </div>
+          </details>
+
+        </div>
       </div>
+
     </div>
   </section>
 
